@@ -30,6 +30,7 @@ public class EnemyPathing : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         RaycastHit hit;
 
         if (Physics.Raycast(this.transform.position, this.transform.forward, out hit, 10f))
@@ -71,4 +72,28 @@ public class EnemyPathing : MonoBehaviour
         }
         
     }
+    private void OnTriggerStay(Collider other)
+    {
+        Debug.Log("Something was hit!");
+
+        if (other.CompareTag("Player"))
+        {
+            Debug.Log("The player was hit!");
+            RaycastHit hit;
+            Vector3 direction = player.transform.position - this.transofrm.position;
+            direction = direction.normalized;
+
+            if (Physics.Raycast(this.transform.position, player.transform.position, direction, out hit))
+            {
+                if (hit.collider.gameObject.CompareTag("Player"))
+                {
+                    Debug.Log("The player is in line of sight. Chase time!");
+                    navMeshAgent.destination = hit.collider.transform.position;
+                    isChasingPlayer = true;
+                }
+            }
+        }
+    }
+
 }
+
